@@ -1,75 +1,33 @@
-import { ContactForm } from './ContactForm/ContactForm';
-import { Filter } from './Filter/Filter';
-import { ContactList } from './ContactList/ContactList';
-import { useDispatch, useSelector } from 'react-redux';
-import {
-  requestContacts,
-  requestAddContact,
-  requestDeleteContact,
-} from 'redux/thunks';
-import {
-  selectContacts,
-  selectError,
-  selectFilterValue,
-  selectIsLoading,
-} from 'redux/selectors';
-import { useEffect } from 'react';
-import { onFilterChange } from 'redux/contactsSlice';
+import { Suspense, lazy } from 'react';
+import Loader from './Loader/Loader';
+import { Route, Routes } from 'react-router-dom';
+import Navigation from './Navigation/Navigation';
 
-export const App = () => {
-  const dispatch = useDispatch();
-  const contacts = useSelector(selectContacts);
-  const isLoading = useSelector(selectIsLoading);
-  const error = useSelector(selectError);
-  const filter = useSelector(selectFilterValue);
+const HomePage = lazy(() => import('pages/HomePage'));
+const RegisterPage = lazy(() => import('pages/RegisterPage'));
+const LoginPage = lazy(() => import('pages/LoginPage'));
+const ContactsPage = lazy(() => import('pages/ContactsPage'));
 
-  useEffect(() => {
-    dispatch(requestContacts());
-  }, [dispatch]);
+const appRoutes = [
+  { path: '/', element: <HomePage /> },
+  { path: '/register', element: <RegisterPage /> },
+  { path: '/login', element: <LoginPage /> },
+  { path: '/contacts', element: <ContactsPage /> },
+];
 
-  const handleAddContact = newContact => {
-    const contactsLists = contacts.some(
-      contact => contact.name.toLowerCase() === newContact.name.toLowerCase()
-    );
-
-    if (contactsLists) {
-      alert(`${newContact.name} is already in contacts`);
-      return;
-    }
-    dispatch(requestAddContact(newContact));
-  };
-
-  const handleDelete = contactName => {
-    dispatch(requestDeleteContact(contactName));
-  };
-
-  const handleChangeFilter = filter => {
-    dispatch(onFilterChange(filter));
-  };
-
+const App = () => {
   return (
-    <div
-      style={{
-        height: '100vh',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        fontSize: 40,
-        color: '#010101',
-      }}
-    >
-      <h1>Phonebook</h1>
-      <ContactForm handleSubmit={handleAddContact} />
-      <h2> Contacts</h2>
-      <Filter filter={filter} handleChange={handleChangeFilter} />
-      {isLoading && <p>Loading contacts ... </p>}
-      {error && <p>{error}</p>}
-      <ContactList
-        contacts={contacts}
-        filter={filter}
-        handleDelete={handleDelete}
-      />
+    <div>
+      <Navigation />
+      <Suspense fallback={<Loader />}>
+        <Routes>
+          {appRoutes.map(({ path, element }) => (
+            <Route key={path} path={path} element={element} />
+          ))}
+        </Routes>
+      </Suspense>
     </div>
   );
 };
+
+export default App;
