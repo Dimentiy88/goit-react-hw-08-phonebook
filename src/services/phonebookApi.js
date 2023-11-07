@@ -31,3 +31,20 @@ export const requestRefreshUser = async () => {
   const { data } = await phonebookInstance.get('/users/current');
   return data;
 };
+
+//TODO -=-=-=-=-=-=-=-=-=-=- CONTACTS API -=-=-=-=-=-=-=-=-=-=-
+
+export const requestAllContacts = async () => {
+  const { data } = await phonebookInstance.get('/contacts');
+  return data;
+};
+
+export const requestAddContact = async newContact => {
+  const { data } = await phonebookInstance.post('/contacts', newContact);
+  return data;
+};
+
+export const requestDeleteContact = async contactId => {
+  const { data } = await phonebookInstance.delete(`/contacts/${contactId}`);
+  return data;
+};

@@ -1,11 +1,17 @@
 import React from 'react';
 import { StyledNavLink } from '../App.styled';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { selectAuthAuthenticated } from 'redux/auth.selectors';
+import { logOutThunk } from 'redux/authSlice';
 
 const Navigation = () => {
   const authenticated = useSelector(selectAuthAuthenticated);
-  // console.log('authenticated', authenticated);
+  const dispatch = useDispatch();
+
+  const onLogOut = () => {
+    dispatch(logOutThunk());
+  };
+
   return (
     <header>
       <nav>
@@ -18,7 +24,7 @@ const Navigation = () => {
             <StyledNavLink className="header-link" to="/contacts">
               Contacts
             </StyledNavLink>
-            <button>Log Out</button>
+            <button onClick={onLogOut}>Log Out</button>
           </>
         ) : (
           <>
