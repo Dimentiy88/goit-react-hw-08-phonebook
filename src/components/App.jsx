@@ -2,10 +2,11 @@ import { Suspense, lazy, useEffect } from 'react';
 import Loader from './Loader/Loader';
 import { Route, Routes } from 'react-router-dom';
 import Navigation from './Navigation/Navigation';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { refreshThunk } from 'redux/authSlice';
 import RestrictedRoute from './RestrictedRoute';
 import PrivateRoute from './PrivateRoute';
+import { selectAuthIsLoading } from 'redux/auth.selectors';
 
 const HomePage = lazy(() => import('pages/HomePage'));
 const RegisterPage = lazy(() => import('pages/RegisterPage'));
@@ -42,6 +43,7 @@ const appRoutes = [
 
 const App = () => {
   const dispatch = useDispatch();
+  const isRefreshing = useSelector(selectAuthIsLoading);
 
   useEffect(() => {
     dispatch(refreshThunk());
@@ -50,13 +52,17 @@ const App = () => {
   return (
     <div>
       <Navigation />
-      <Suspense fallback={<Loader />}>
-        <Routes>
-          {appRoutes.map(({ path, element }) => (
-            <Route key={path} path={path} element={element} />
-          ))}
-        </Routes>
-      </Suspense>
+      {isRefreshing ? (
+        <Loader />
+      ) : (
+        <Suspense fallback={<Loader />}>
+          <Routes>
+            {appRoutes.map(({ path, element }) => (
+              <Route key={path} path={path} element={element} />
+            ))}
+          </Routes>
+        </Suspense>
+      )}
     </div>
   );
 };
