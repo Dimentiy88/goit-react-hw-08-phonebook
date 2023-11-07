@@ -1,5 +1,10 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { requestLogin, requestRegister } from 'services/phonebookApi';
+import {
+  requestLogin,
+  requestRefreshUser,
+  requestRegister,
+  setToken,
+} from 'services/phonebookApi';
 
 export const loginThunk = createAsyncThunk(
   'auth/login',
@@ -29,6 +34,32 @@ export const registerThunk = createAsyncThunk(
   }
 );
 
+export const refreshThunk = createAsyncThunk(
+  'auth/refresh',
+  async (_, thunkAPI) => {
+    const state = thunkAPI.getState();
+    const token = state.auth.token;
+
+    try {
+      setToken(token);
+      const authData = await requestRefreshUser();
+
+      return authData;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.message);
+    }
+  },
+  {
+    condition: (_, thunkAPI) => {
+      const state = thunkAPI.getState();
+      const token = state.auth.token;
+
+      if (!token) return false;
+      return true;
+    },
+  }
+);
+
 const INITIAL_STATE = {
   token: null,
   user: {
@@ -46,6 +77,9 @@ const authSlice = createSlice({
 
   extraReducers: builder =>
     builder
+
+      //! -=-=-=-=-=-=-=-=-=-=- REGISTER USER -=-=-=-=-=-=-=-=-=-=-
+
       .addCase(registerThunk.pending, state => {
         state.isLoading = true;
         state.error = null;
@@ -61,7 +95,7 @@ const authSlice = createSlice({
         state.error = action.payload;
       })
 
-      //! -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+      //! -=-=-=-=-=-=-=-=-=-=- LOGIN USER -=-=-=-=-=-=-=-=-=-=-
 
       .addCase(loginThunk.pending, state => {
         state.isLoading = true;
@@ -74,6 +108,22 @@ const authSlice = createSlice({
         state.user = action.payload.user;
       })
       .addCase(loginThunk.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
+      })
+
+      //! -=-=-=-=-=-=-=-=-=-=- REFRESH USER -=-=-=-=-=-=-=-=-=-=-
+
+      .addCase(refreshThunk.pending, state => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(refreshThunk.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.authenticated = true;
+        state.user = action.payload;
+      })
+      .addCase(refreshThunk.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload;
       }),
