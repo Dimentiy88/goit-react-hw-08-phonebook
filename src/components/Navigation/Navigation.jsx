@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyledNavLink } from '../App.styled';
+import { Button } from '../App.styled';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectAuthAuthenticated } from 'redux/auth.selectors';
 import { logOutThunk } from 'redux/authSlice';
@@ -24,7 +25,7 @@ const Navigation = () => {
             <StyledNavLink className="header-link" to="/contacts">
               Contacts
             </StyledNavLink>
-            <button onClick={onLogOut}>Log Out</button>
+            <Button onClick={onLogOut}>Log Out</Button>
           </>
         ) : (
           <>
