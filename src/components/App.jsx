@@ -9,8 +9,8 @@ import PrivateRoute from './PrivateRoute';
 import { selectAuthIsLoading } from 'redux/auth.selectors';
 
 const HomePage = lazy(() => import('pages/HomePage'));
-const RegisterPage = lazy(() => import('pages/RegisterPage'));
-const LoginPage = lazy(() => import('pages/LoginPage'));
+const RegisterPage = lazy(() => import('pages/RegisterPage/RegisterPage'));
+const LoginPage = lazy(() => import('pages/LoginPage/LoginPage'));
 const ContactsPage = lazy(() => import('pages/ContactsPage'));
 
 const appRoutes = [

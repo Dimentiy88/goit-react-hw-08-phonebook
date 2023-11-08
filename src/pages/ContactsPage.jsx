@@ -12,6 +12,7 @@ import {
 } from 'redux/selectors';
 import { useEffect } from 'react';
 import { onFilterChange } from 'redux/contactsSlice';
+import { Container } from '@mui/material';
 
 const ContactsPage = () => {
   const dispatch = useDispatch();
@@ -45,9 +46,8 @@ const ContactsPage = () => {
   };
 
   return (
-    <div
+    <Container
       style={{
-        height: '100vh',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
@@ -67,7 +67,7 @@ const ContactsPage = () => {
         filter={filter}
         handleDelete={handleDelete}
       />
-    </div>
+    </Container>
   );
 };
 export default ContactsPage;

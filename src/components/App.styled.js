@@ -6,42 +6,32 @@ export const StyledNavLink = styled(NavLink)`
   border: 1px solid black;
   border-radius: 10px;
   display: inline-block;
-  padding: 20px;
+  padding: 10px;
   font-size: 22px;
   text-decoration: none;
-  margin-right: 15px;
+  margin-right: auto;
 
   transition: all 0.3s;
 
   &.active {
     border: 1px solid white;
-    background-color: black;
+    /* background-color: black; */
     color: white;
   }
 `;
-export const Button = styled.button`
-  font-weight: 600;
-  font-size: 18px;
 
-  margin-top: 24px;
-  padding: 1.063em 1.5em;
+export const Header = styled.header`
+  display: flex;
+  align-items: center;
 
-  background-color: rgb(144 74 52);
+  padding: 22px 48px;
+`;
 
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.04);
-  border: 1px solid rgba(250, 187, 24, 0.1);
-  border-radius: 14px;
+export const ContentPageContainer = styled.div`
+  padding: 38px 48px;
+  height: 100dvb;
 
-  cursor: pointer;
-
-  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1);
-  transition: color 250ms cubic-bezier(0.4, 0, 0.2, 1);
-  transition: border 250ms cubic-bezier(0.4, 0, 0.2, 1);
-
-  :hover,
-  :focus {
-    color: #000000;
-    background-color: rgba(250, 187, 24, 0.1);
-    border: 1px solid #000000;
-  }
+  border-radius: 32px 32px 0 0;
+  background-color: #f9f9f9;
+  margin-top: 100px;
 `;
